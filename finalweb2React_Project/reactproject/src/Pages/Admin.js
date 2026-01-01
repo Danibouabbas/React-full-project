@@ -5,7 +5,6 @@ const API = process.env.REACT_APP_BACKEND_URL
   ? `${process.env.REACT_APP_BACKEND_URL}/api`
   : "http://localhost:5000/api";
 
-
 function Admin() {
   const [menu, setMenu] = useState([]);
   const [name, setName] = useState("");
@@ -14,19 +13,20 @@ function Admin() {
   const [category, setCategory] = useState("food");
   const [image, setImage] = useState(null);
 
-  function loadMenu() {
-    axios.get(`${API}/menu`).then((res) => setMenu(res.data));
-  }
-
   useEffect(() => {
     loadMenu();
   }, []);
 
-  function addItem(e) {
+  const loadMenu = async () => {
+    const res = await axios.get(`${API}/menu`);
+    setMenu(res.data);
+  };
+
+  const addItem = async (e) => {
     e.preventDefault();
 
     if (!image) {
-      alert("Please select an image file");
+      alert("Please select an image");
       return;
     }
 
@@ -34,50 +34,72 @@ function Admin() {
     formData.append("name", name);
     formData.append("description", description);
     formData.append("price", price);
-    formData.append("category", category);
-    formData.append("image", image); 
+    formData.append("category", category.toLowerCase()); // IMPORTANT
+    formData.append("image", image);
 
-    axios.post(`${API}/menu`, formData, {
-      headers: { "Content-Type": "multipart/form-data" }
-    })
-    .then(() => {
+    try {
+      await axios.post(`${API}/menu`, formData);
       setName("");
       setDescription("");
       setPrice("");
       setCategory("food");
       setImage(null);
-      document.getElementById("fileInput").value = ""; 
+      document.getElementById("fileInput").value = "";
       loadMenu();
-    })
-    .catch(err => alert("Error adding item: " + err.message));
-  }
-
-  function deleteItem(id) {
-    axios.delete(`${API}/menu/${id}`).then(() => loadMenu());
-  }
+    } catch (err) {
+      console.error("Error adding item:", err.response?.data || err.message);
+      alert("Failed to add item");
+    }
+  };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Manage Menu</h1>
+    <div style={{ padding: "20px" }}>
+      <h2>Manage Menu</h2>
+
       <form onSubmit={addItem} style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-        <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
-        <input id="fileInput" type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} required />
-        <input type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} required />
+        <input
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+
+        <input
+          type="file"
+          id="fileInput"
+          accept="image/*"
+          onChange={(e) => setImage(e.target.files[0])}
+          required
+        />
+
+        <input
+          type="number"
+          placeholder="Price"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          required
+        />
+
         <select value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="food">Food</option>
           <option value="drinks">Drinks</option>
         </select>
-        <textarea placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+
         <button type="submit">Add Item</button>
       </form>
+
       <hr />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "20px" }}>
+
+      <div>
         {menu.map((item) => (
-          <div key={item.id} style={{ border: "1px solid #ddd", padding: 10 }}>
-            <img  src={`${process.env.REACT_APP_BACKEND_URL || "http://localhost:5000"}${item.image_url}`} alt={item.name} style={{ width: "100%", height: "150px", objectFit: "cover" }} />
-            <h3>{item.name}</h3>
+          <div key={item.id}>
+            <img
+              src={`${process.env.REACT_APP_BACKEND_URL}${item.image_url}`}
+              alt={item.name}
+              width="100"
+            />
+            <h4>{item.name}</h4>
             <p>${item.price}</p>
-            <button onClick={() => deleteItem(item.id)} style={{ color: "red" }}>Delete</button>
           </div>
         ))}
       </div>
