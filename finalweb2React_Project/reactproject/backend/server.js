@@ -1,4 +1,4 @@
-require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2");
@@ -69,7 +69,7 @@ app.get("/api/menu", (req, res) => {
   });
 });
 
-// ✅ Add new menu item
+
 app.post("/api/menu", upload.single("image"), (req, res) => {
   const { name, description, price, category } = req.body;
 
@@ -96,7 +96,7 @@ app.post("/api/menu", upload.single("image"), (req, res) => {
   );
 });
 
-// ✅ Delete menu item
+
 app.delete("/api/menu/:id", (req, res) => {
   db.query("DELETE FROM menu_items WHERE id = ?", [req.params.id], (err) => {
     if (err) return res.status(500).json(err);
@@ -104,7 +104,7 @@ app.delete("/api/menu/:id", (req, res) => {
   });
 });
 
-/* ================= Start Server ================= */
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
