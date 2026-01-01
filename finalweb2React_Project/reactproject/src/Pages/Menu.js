@@ -27,10 +27,11 @@ function Menu() {
             style={{ textDecoration: "none", color: "black", border: "1px solid #ccc", padding: 10 }}
           >
             <img
-              src={item.image_url}
-              alt={item.name}
-              style={{ width: "100%", height: 150, objectFit: "cover" }}
+               src={`${process.env.REACT_APP_BACKEND_URL || "http://localhost:5000"}${item.image_url}`}
+                 alt={item.name}
+               style={{ width: "100%", height: 150, objectFit: "cover" }}
             />
+
             <h3>{item.name}</h3>
             <p>${item.price}</p>
           </Link>

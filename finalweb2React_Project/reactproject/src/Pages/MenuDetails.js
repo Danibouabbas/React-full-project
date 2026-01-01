@@ -12,12 +12,13 @@ export default function MenuDetails() {
   const [loading, setLoading] = useState(true);
 
 useEffect(() => {
+  setLoading(true);
+
   axios
-    .get(`${process.env.REACT_APP_BACKEND_URL}/api/menu/${id}`)
-    .then((res) => {
-      setItem(res.data);
-    })
-    .catch((err) => console.error(err));
+    .get(`${API}/menu/${id}`)
+    .then((res) => setItem(res.data))
+    .catch((err) => console.error(err))
+    .finally(() => setLoading(false));
 }, [id]);
 
 
