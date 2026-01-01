@@ -9,12 +9,12 @@ const API = process.env.REACT_APP_BACKEND_URL
 export default function Food() {
   const { sortedMenu } = useMenu();
 
-  // Safety check
+ 
   if (!sortedMenu || sortedMenu.length === 0) {
     return <p className="loading">Loading food menu...</p>;
   }
 
-  // Only food items (case-insensitive)
+  
   const foodItems = sortedMenu.filter(
     (item) =>
       item.category &&

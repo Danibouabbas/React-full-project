@@ -11,16 +11,16 @@ export default function ManageMenu() {
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState(null); // This stores the file from your device
+  const [image, setImage] = useState(null); 
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("food");
 
-  // LOAD MENU
+  
   useEffect(() => {
     axios.get(`${API}/menu`).then((res) => setMenu(res.data));
   }, [setMenu]);
 
-  // ADD ITEM
+ 
   function addItem(e) {
     e.preventDefault();
 
@@ -29,26 +29,26 @@ export default function ManageMenu() {
       return;
     }
 
-    // IMPORTANT: Use FormData for file uploads
+    
     const formData = new FormData();
     formData.append("name", name);
     formData.append("description", description);
     formData.append("price", price);
     formData.append("category", category);
-    formData.append("image", image); // The key "image" must match the backend
+    formData.append("image", image); 
 
     axios
       .post(`${API}/menu`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then(() => {
-        // RESET FORM
+        
         setName("");
         setDescription("");
         setImage(null);
         setPrice("");
         setCategory("food");
-        // Clear the file input visually
+        
         document.getElementById("fileInput").value = "";
 
         return axios.get(`${API}/menu`);
@@ -57,7 +57,7 @@ export default function ManageMenu() {
       .catch((err) => console.error("Error adding item:", err));
   }
 
-  // DELETE ITEM
+  
   function deleteItem(id) {
     axios
       .delete(`${API}/menu/${id}`)
@@ -78,7 +78,7 @@ export default function ManageMenu() {
           required
         />
 
-        {/* FILE INPUT FOR DEVICE UPLOAD */}
+        
         <input
           id="fileInput"
           type="file"

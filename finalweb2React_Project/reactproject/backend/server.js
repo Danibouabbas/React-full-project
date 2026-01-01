@@ -24,7 +24,7 @@ if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath);
 
 app.use("/uploads", express.static(uploadPath));
 
-/* ================= DATABASE (POOL) ================= */
+
 const db = mysql.createPool({
   host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
@@ -36,7 +36,7 @@ const db = mysql.createPool({
   queueLimit: 0
 });
 
-// Test DB connection once
+
 db.getConnection((err, connection) => {
   if (err) {
     console.error("❌ Database connection failed:", err.message);
@@ -46,9 +46,9 @@ db.getConnection((err, connection) => {
   }
 });
 
-/* ================= ROUTES ================= */
 
-// Get all menu items
+
+
 app.get("/api/menu", (req, res) => {
   db.query("SELECT * FROM menu_items", (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
@@ -56,7 +56,7 @@ app.get("/api/menu", (req, res) => {
   });
 });
 
-// Get single item
+
 app.get("/api/menu/:id", (req, res) => {
   db.query(
     "SELECT * FROM menu_items WHERE id = ?",
@@ -70,7 +70,7 @@ app.get("/api/menu/:id", (req, res) => {
   );
 });
 
-// Add item
+
 const upload = multer({ dest: uploadPath });
 
 app.post("/api/menu", upload.single("image"), (req, res) => {
@@ -99,7 +99,7 @@ app.post("/api/menu", upload.single("image"), (req, res) => {
   );
 });
 
-// Delete item
+
 app.delete("/api/menu/:id", (req, res) => {
   db.query("DELETE FROM menu_items WHERE id = ?", [req.params.id], (err) => {
     if (err) return res.status(500).json({ error: err.message });
@@ -107,7 +107,7 @@ app.delete("/api/menu/:id", (req, res) => {
   });
 });
 
-/* ================= START SERVER ================= */
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
