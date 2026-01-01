@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const API = "http://localhost:5000/api";
+const API = process.env.REACT_APP_BACKEND_URL
+  ? `${process.env.REACT_APP_BACKEND_URL}/api`
+  : "http://localhost:5000/api";
+
 
 function Admin() {
   const [menu, setMenu] = useState([]);
@@ -32,7 +35,7 @@ function Admin() {
     formData.append("description", description);
     formData.append("price", price);
     formData.append("category", category);
-    formData.append("image", image); // The file object
+    formData.append("image", image); 
 
     axios.post(`${API}/menu`, formData, {
       headers: { "Content-Type": "multipart/form-data" }
@@ -43,7 +46,7 @@ function Admin() {
       setPrice("");
       setCategory("food");
       setImage(null);
-      document.getElementById("fileInput").value = ""; // Clear file input
+      document.getElementById("fileInput").value = ""; 
       loadMenu();
     })
     .catch(err => alert("Error adding item: " + err.message));
@@ -71,7 +74,7 @@ function Admin() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "20px" }}>
         {menu.map((item) => (
           <div key={item.id} style={{ border: "1px solid #ddd", padding: 10 }}>
-            <img src={`http://localhost:5000${item.image_url}`} alt={item.name} style={{ width: "100%", height: "150px", objectFit: "cover" }} />
+            <img  src={`${process.env.REACT_APP_BACKEND_URL || "http://localhost:5000"}${item.image_url}`} alt={item.name} style={{ width: "100%", height: "150px", objectFit: "cover" }} />
             <h3>{item.name}</h3>
             <p>${item.price}</p>
             <button onClick={() => deleteItem(item.id)} style={{ color: "red" }}>Delete</button>

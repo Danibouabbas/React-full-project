@@ -2,7 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useMenu } from "../Context/MenuContext";
 
-const BACKEND_URL = "http://localhost:5000";
+const API = process.env.REACT_APP_BACKEND_URL
+  ? `${process.env.REACT_APP_BACKEND_URL}/api`
+  : "http://localhost:5000/api";
 
 export default function Drinks() {
   const { sortedMenu } = useMenu();
@@ -19,10 +21,11 @@ export default function Drinks() {
         {drinks.map((item) => (
           <Link to={`/menu/${item.id}`} key={item.id} className="menu-card">
             <img
-              src={`${BACKEND_URL}${item.image_url}`}
-              alt={item.name}
-              className="menu-image"
-            />
+  src={`${process.env.REACT_APP_BACKEND_URL || "http://localhost:5000"}${item.image_url}`}
+  alt={item.name}
+  className="menu-image"
+/>
+
 
             <div className="menu-content">
               <h3>{item.name}</h3>

@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 
-const BACKEND_URL = "http://localhost:5000";
+const API = process.env.REACT_APP_BACKEND_URL
+  ? `${process.env.REACT_APP_BACKEND_URL}/api`
+  : "http://localhost:5000/api";
 
 export default function MenuDetails() {
   const { id } = useParams();
@@ -36,7 +38,7 @@ export default function MenuDetails() {
 
       <div className="details-card">
         <img
-          src={`${BACKEND_URL}${item.image_url}`}
+            src={`${process.env.REACT_APP_BACKEND_URL || "http://localhost:5000"}${item.image_url}`}
           alt={item.name}
           className="details-image"
         />
