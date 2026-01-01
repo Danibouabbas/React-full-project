@@ -10,7 +10,7 @@ export default function Drinks() {
   const { sortedMenu } = useMenu();
 
   const drinks = sortedMenu.filter(
-    (item) => item.category === "drink"
+    (item) => item.category === "drinks"
   );
 
   return (
