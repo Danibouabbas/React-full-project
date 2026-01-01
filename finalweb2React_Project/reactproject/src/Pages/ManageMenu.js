@@ -98,7 +98,7 @@ export default function ManageMenu() {
 
         <select value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="food">Food</option>
-          <option value="drink">Drink</option>
+          <option value="drinks">Drink</option>
         </select>
 
         <textarea
