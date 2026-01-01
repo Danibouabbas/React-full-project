@@ -11,18 +11,16 @@ export default function MenuDetails() {
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    axios
-      .get(`${BACKEND_URL}/api/menu`)
-      .then((res) => {
-        const foundItem = res.data.find(
-          (i) => i.id === Number(id)
-        );
-        setItem(foundItem);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, [id]);
+useEffect(() => {
+  axios
+    .get(`${process.env.REACT_APP_BACKEND_URL}/api/menu/${id}`)
+    .then((res) => {
+      setItem(res.data);
+    })
+    .catch((err) => console.error(err));
+}, [id]);
+
+
 
   if (loading) {
     return <p className="loading">Loading...</p>;
